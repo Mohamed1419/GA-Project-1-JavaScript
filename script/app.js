@@ -67,6 +67,7 @@ function loadGrid() {
     grid.append(cells[i]);
   }
 }
+loadGrid();
 
 function loadSpaceship() {
   cells[`${spaceshipPosition}`].classList.add("spaceship");
@@ -107,10 +108,33 @@ function loadEnemy4() {
   }
 }
 
+function gameOver() {
+  //remove enemies
+  for (let i = 0; i < enemy1positions.length; i++) {
+    cells[`${enemy1positions[i]}`].classList.remove("enemy1");
+  }
+  for (let i = 0; i < enemy2positions.length; i++) {
+    cells[`${enemy2positions[i]}`].classList.remove("enemy2");
+  }
+  for (let i = 0; i < enemy3positions.length; i++) {
+    cells[`${enemy3positions[i]}`].classList.remove("enemy3");
+  }
+  for (let i = 0; i < enemy4positions.length; i++) {
+    cells[`${enemy4positions[i]}`].classList.remove("enemy4");
+  }
+  enemy1positions = [];
+  enemy2positions = [];
+  enemy3positions = [];
+  enemy4positions = [];
+
+  //reset score
+  alert("You died. Game Over! ");
+}
+
 start.addEventListener("click", () => {
   // clearArray();
   console.log(cells);
-  loadGrid();
+  //loadGrid();
   loadSpaceship();
   console.log(cells[390]);
   console.log(cells[`${cells[390].classList}`]);
@@ -161,7 +185,40 @@ const enemyMovement = setInterval(() => {
     cells[`${position}`].classList.add("enemy4");
     return position;
   });
-}, 5000);
+
+  // if any of the values in any of the 4 enemy position arrays are greater than 380, call gameOver function
+  enemy1positions.every((position) => {
+    if (position > 380) {
+      gameOver();
+      return false;
+    }
+    return true;
+  });
+
+  enemy2positions.every((position) => {
+    if (position > 380) {
+      gameOver();
+      return false;
+    }
+    return true;
+  });
+
+  enemy3positions.every((position) => {
+    if (position > 380) {
+      gameOver();
+      return false;
+    }
+    return true;
+  });
+
+  enemy4positions.every((position) => {
+    if (position > 380) {
+      gameOver();
+      return false;
+    }
+    return true;
+  });
+}, 1000);
 
 //projectile
 /*
