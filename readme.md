@@ -7,7 +7,8 @@ Thinking out all the main aspects of the game:
     - restrict movement between cells 381 - 400
     - came across an issue with making the code block for the movement working , the problem was that i had the functions coded in however it was not being called. Therefore, i called the function in the keyup and keydown handlers and the code was running.
 - load up invaders
-    - need to be able to single out all the enemy cells. created an array which changes the enemy positions every few seconds, had a problem with that code block only running on e
+    - need to be able to single out all the enemy cells. created an array which changes the enemy positions every few seconds, had a problem with that code block only running once, fixed by changing .forEach to .map as the original enemy1positions array was not being affected by forEach
+    - 
 - load up score board
 
 thinking of all the aspects that dont manifest upon loading up

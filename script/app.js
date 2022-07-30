@@ -7,10 +7,10 @@ let cells = [];
 let gridCount = 400;
 let rightPressed = false;
 let leftPressed = false;
-let enemy1positionsGlobal = [];
-let enemy2positionsGlobal = [];
-let enemy3positionsGlobal = [];
-let enemy4positionsGlobal = [];
+let enemy1positions = [];
+let enemy2positions = [];
+let enemy3positions = [];
+let enemy4positions = [];
 
 //adding left right functionality for spaceship
 document.addEventListener("keydown", keyDownHandler, false);
@@ -78,7 +78,7 @@ function loadEnemy1() {
   for (let i = 121; i < 140; i += 2) {
     cells[i].classList.add("enemy1");
 
-    enemy1positionsGlobal.push(i + 1);
+    enemy1positions.push(i);
   }
 }
 
@@ -87,7 +87,7 @@ function loadEnemy2() {
   for (let i = 80; i < 99; i += 2) {
     cells[i].classList.add("enemy2");
 
-    enemy2positionsGlobal.push(i + 1);
+    enemy2positions.push(i);
   }
 }
 
@@ -95,7 +95,7 @@ function loadEnemy3() {
   for (let i = 41; i < 60; i += 2) {
     cells[i].classList.add("enemy3");
 
-    enemy3positionsGlobal.push(i + 1);
+    enemy3positions.push(i);
   }
 }
 
@@ -103,7 +103,7 @@ function loadEnemy4() {
   for (let i = 0; i < 19; i += 2) {
     cells[i].classList.add("enemy4");
 
-    enemy4positionsGlobal.push(i + 1);
+    enemy4positions.push(i);
   }
 }
 
@@ -119,50 +119,49 @@ start.addEventListener("click", () => {
   loadEnemy2();
   loadEnemy3();
   loadEnemy4();
-
-  let enemy1positions = enemy1positionsGlobal;
-  let enemy2positions = enemy2positionsGlobal;
-  let enemy3positions = enemy3positionsGlobal;
-  let enemy4positions = enemy4positionsGlobal;
-
-  //enemy descend
-  const enemyMovement = setInterval(() => {
-    //targeting enemy cells
-    //update enemy1 positions
-    //cells[`${enemy1positions}`].classList.remove("enemy1"); //idea of what i want to happen, will need to loop throught the enemy1positions
-
-    cells.forEach((cell) => {
-      if (
-        cell.classList.contains("enemy1") ||
-        cell.classList.contains("enemy2") ||
-        cell.classList.contains("enemy3") ||
-        cell.classList.contains("enemy4")
-      ) {
-        cell.classList.remove("enemy1", "enemy2", "enemy3", "enemy4");
-      }
-    });
-
-    enemy1positions.forEach((position) => {
-      position += 19;
-      cells[`${position}`].classList.add("enemy1");
-    });
-
-    enemy2positions.forEach((position) => {
-      position += 19;
-      cells[`${position}`].classList.add("enemy2");
-    });
-
-    enemy3positions.forEach((position) => {
-      position += 19;
-      cells[`${position}`].classList.add("enemy3");
-    });
-
-    enemy4positions.forEach((position) => {
-      position += 19;
-      cells[`${position}`].classList.add("enemy4");
-    });
-  }, 1000);
 });
+
+//enemy descent
+
+//GENERAL OUTLOOK: every second (for the sake of testing) every enemy will be removed from its position, given a new position on grid, and then added to those new positions on the grid
+const enemyMovement = setInterval(() => {
+  //cells[`${enemy1positions}`].classList.remove("enemy1"); //will need to loop through the enemy1positions
+
+  cells.forEach((cell) => {
+    if (
+      cell.classList.contains("enemy1") ||
+      cell.classList.contains("enemy2") ||
+      cell.classList.contains("enemy3") ||
+      cell.classList.contains("enemy4")
+    ) {
+      cell.classList.remove("enemy1", "enemy2", "enemy3", "enemy4");
+    }
+  });
+
+  enemy1positions = enemy1positions.map((position) => {
+    position += 20;
+    cells[position].classList.add("enemy1");
+    return position; // This is the new value of the enemy position!
+  });
+
+  enemy2positions = enemy2positions.map((position) => {
+    position += 20;
+    cells[`${position}`].classList.add("enemy2");
+    return position;
+  });
+
+  enemy3positions = enemy3positions.map((position) => {
+    position += 20;
+    cells[`${position}`].classList.add("enemy3");
+    return position;
+  });
+
+  enemy4positions = enemy4positions.map((position) => {
+    position += 20;
+    cells[`${position}`].classList.add("enemy4");
+    return position;
+  });
+}, 5000);
 
 //projectile
 /*
