@@ -1,0 +1,71 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+#cell-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 600px;
+    width: 600px;
+    align-items: center;
+}
+
+#cell-container div {
+    height: 5%;
+    width: 5%;
+    border: 1px solid black;
+    flex-grow: 1;
+    justify-content: center;
+    background-color: whitesmoke;
+}
+
+
+
+#cell-container div.spaceship {
+    background-image: url('./spaceship.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#cell-container div.enemy1 {
+    background-image: url('./enemy1.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#cell-container div.enemy2 {
+    background-image: url('./enemy2.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#cell-container div.enemy3 {
+    background-image: url('./enemy3.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#cell-container div.enemy4 {
+    background-image: url('./enemy4.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+
+#cell-container div.ufo {
+    background-image: url('./ufo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
