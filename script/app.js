@@ -7,10 +7,12 @@ let cells = [];
 let gridCount = 400;
 let rightPressed = false;
 let leftPressed = false;
+let spacePressed = false;
 let enemy1positions = [];
 let enemy2positions = [];
 let enemy3positions = [];
 let enemy4positions = [];
+let projectilePosition = null;
 
 //adding left right functionality for spaceship
 document.addEventListener("keydown", keyDownHandler, false);
@@ -26,6 +28,10 @@ function keyDownHandler(e) {
     leftPressed = true;
     updatePosition();
     console.log("left arrow has been pressed");
+  } else if (e.key == "Space" || e.keyCode == 32) {
+    spacePressed = true;
+    spawnProjectile();
+    console.log("spacebar has been pressed");
   }
 }
 
@@ -39,8 +45,50 @@ function keyUpHandler(e) {
     leftPressed = false;
     updatePosition();
     console.log("left arrow has been released!");
+  } else if (e.key == "Space" || e.keyCode == 32) {
+    spacePressed = false;
+    console.log("spacebar has been released!");
   }
 }
+
+//projectile funtionality
+
+function spawnProjectile() {
+  if (spacePressed === true) {
+    let newProjectile =
+      cells[spaceshipPosition - 20].classList.add("projectile");
+    projectilePosition = cells[spaceshipPosition - 20];
+  }
+}
+/*
+const projectilePath = setInterval(() => {
+  for (let i = 0; i < enemy1positions.length; i++) {
+    if (projectilePosition === enemy1positions[i] + 20) {
+      //remove enemy
+      enemy1positions.splice(i, 1);
+      cells[i].classList.remove("enemy1");
+      //remove projectile
+      projectilePosition = null;
+      cells[i + 20].classList.remove("projectile");
+      //despawn enemyx , despawn projectile, add 100 points, update projectilePosition
+      clearInterval(projectilePath);
+    } else {
+      cells[projectilePosition].classList.remove("projectile");
+      projectilePosition -= 20;
+      cells[projectilePosition].classList.add("projectile");
+    }
+  }
+}, 100);
+*/
+
+const projectilePath = setInterval(() => {
+  if (projectilePosition > 0) {
+    cells[projectilePosition].classList.remove("projectile");
+    projectilePosition -= 20;
+    cells[projectilePosition].classList.add("projectile");
+    console.log("button has been pressed");
+  }
+}, 100);
 
 function updatePosition() {
   if (rightPressed && spaceshipPosition < 399) {
@@ -54,6 +102,7 @@ function updatePosition() {
     cells[`${spaceshipPosition}`].classList.add("spaceship");
   }
 }
+
 //need to clear array to stop addition of 400 elements everytime user presses start
 // function clearArray() {
 //   cells = [];
@@ -128,7 +177,7 @@ function gameOver() {
   enemy4positions = [];
 
   //reset score
-  alert("You died. Game Over! ");
+  alert("You died. Game Over!");
 }
 
 start.addEventListener("click", () => {
@@ -219,13 +268,3 @@ const enemyMovement = setInterval(() => {
     return true;
   });
 }, 1000);
-
-//projectile
-/*
-const projectile = setInterval(() => {
-  if (projectilePosition === enemy - 20) {
-    //despawn enemy , despawn projectile, add 100 points
-  } else projectilePosition += 20;
-}, 1000);
-
-*/

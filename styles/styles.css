@@ -69,3 +69,8 @@ body {
     background-size: contain;
 }
 
+#cell-container div.projectile {
+    background-image: url('./missile.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
