@@ -1,6 +1,9 @@
 const start = document.getElementById("start-button");
 const grid = document.getElementById("cell-container");
 const spaceship = document.querySelector(".spaceship");
+const scoreboard = document.getElementById("scoreboard");
+let score = 0;
+scoreboard.innerText = `${score}`;
 let level = 1;
 let spaceshipPosition = 390;
 let cells = [];
@@ -53,6 +56,32 @@ function keyUpHandler(e) {
 }
 
 //projectile funtionality
+const projectilePath = setInterval(() => {
+  for (let i = 0; i < projectilePositions.length; i++) {
+    if (projectilePositions[i] > 20) {
+      cells[projectilePositions[i]].classList.remove("projectile");
+      projectilePositions[i] -= 20;
+      cells[projectilePositions[i]].classList.add("projectile");
+
+      // console.log(projectilePositions + " MOVING");
+    } else if (projectilePositions[i] <= 20 /*if its on the first row*/) {
+      // console.log("one has reached the end" + projectilePositions);
+      cells[projectilePositions[i]].classList.remove("projectile");
+      // projectilePositions.splice(projectilePositions.indexOf(i), 1);
+      projectilePositions.shift();
+      // console.log(projectilePositions);
+    } else if (
+      projectilePositions[i] <= 20 ||
+      projectilePositions.length <= 1
+    ) {
+      console.log("STOP CODE");
+      cells[projectilePositions[i]].classList.remove("projectile");
+      // projectilePositions.splice(projectilePositions.indexOf(i), 1);
+      projectilePositions.shift();
+      clearInterval(projectilePath);
+    }
+  }
+}, 100);
 
 //projectile fire when space is pressed
 function spawnProjectile() {
@@ -65,49 +94,66 @@ function spawnProjectile() {
   //number on the grid is pushed into projectilePositions array
 
   const projectilePath = setInterval(() => {
-    for (let i = 0; i < projectilePositions.length; i++) {
-      if (projectilePositions[i] > 20) {
-        cells[projectilePositions[i]].classList.remove("projectile");
-        projectilePositions[i] -= 20;
-        cells[projectilePositions[i]].classList.add("projectile");
-        console.log(projectilePositions + " MOVING");
-      } else if (projectilePositions[i] <= 20 /*if its on the first row*/) {
-        console.log("one has reached the end" + projectilePositions);
-        cells[projectilePositions[i]].classList.remove("projectile");
-        // projectilePositions.splice(projectilePositions.indexOf(i), 1);
-        projectilePositions.shift();
-        console.log(projectilePositions);
-      } else if (
-        projectilePositions[i] <= 20 &&
-        projectilePositions.length <= 1
-      ) {
-        console.log("STOP CODE");
-        cells[projectilePositions[i]].classList.remove("projectile");
-        // projectilePositions.splice(projectilePositions.indexOf(i), 1);
-        projectilePositions.shift();
-        console.log(projectilePositions);
-        clearInterval(projectilePath);
+    //projectile hit
+
+    for (let i = 0; i < enemyPositions.length; i++) {
+      for (let j = 0; j < projectilePositions.length; j++) {
+        console.log(enemyPositions[i], projectilePositions[j]);
+        if (enemyPositions[i] === projectilePositions[j]) {
+          score += 100;
+          scoreboard.innerText = `${score}`;
+          cells[enemyPositions[i]].classList.remove(
+            "enemy1",
+            "enemy2",
+            "enemy3",
+            "enemy4"
+          );
+
+          if (enemy1positions.indexOf(enemyPositions[i]) >= 0) {
+            enemy1positions.splice(
+              enemy1positions.indexOf(enemyPositions[i]),
+              1
+            );
+          }
+
+          // [].splice(-1, 1) -> removes the last item in array
+
+          if (enemy2positions.indexOf(enemyPositions[i]) >= 0) {
+            enemy2positions.splice(
+              enemy2positions.indexOf(enemyPositions[i]),
+              1
+            );
+          }
+
+          if (enemy3positions.indexOf(enemyPositions[i]) >= 0) {
+            enemy3positions.splice(
+              enemy3positions.indexOf(enemyPositions[i]),
+              1
+            );
+          }
+
+          if (enemy4positions.indexOf(enemyPositions[i]) >= 0) {
+            enemy4positions.splice(
+              enemy4positions.indexOf(enemyPositions[i]),
+              1
+            );
+          }
+
+          // enemy2positions.splice(enemy2positions.indexOf(enemyPositions[i]), 1);
+          // enemy3positions.splice(enemy3positions.indexOf(enemyPositions[i]), 1);
+          // enemy4positions.splice(enemy4positions.indexOf(enemyPositions[i]), 1);
+
+          enemyPositions = enemy1positions.concat(
+            enemy2positions,
+            enemy3positions,
+            enemy4positions
+          );
+          // clearInterval(projectilePath);
+          cells[projectilePositions[j]].classList.remove("projectile");
+          projectilePositions.splice(j, 1);
+        }
       }
     }
-    //projectile hit
-    enemyPositions.every((position) => {
-      if (projectilePositions === position + 20) {
-        cells[position].classList.remove(
-          "enemy1",
-          "enemy2",
-          "enemy3",
-          "enemy4"
-        );
-        enemy1positions.splice(enemy1positions.indexOf(position), 1, null);
-        enemy2positions.splice(enemy2positions.indexOf(position), 1, null);
-        enemy3positions.splice(enemy3positions.indexOf(position), 1, null);
-        enemy4positions.splice(enemy4positions.indexOf(position), 1, null);
-        clearInterval(projectilePath);
-        cells[projectilePositions].classList.remove("projectile");
-        return false;
-      }
-      return true;
-    });
   }, 400);
 }
 
@@ -140,7 +186,7 @@ loadGrid();
 
 function loadSpaceship() {
   cells[`${spaceshipPosition}`].classList.add("spaceship");
-  console.log("spaceship has been loaded");
+  // console.log("spaceship has been loaded");
 }
 
 //121 - 139
@@ -195,18 +241,29 @@ function gameOver() {
   enemy2positions = [];
   enemy3positions = [];
   enemy4positions = [];
+  enemyPositions = enemy1positions.concat(
+    enemy2positions,
+    enemy3positions,
+    enemy4positions
+  );
+  for (let i = 0; i < projectilePositions.length; i++) {
+    cells[projectilePositions[i]].classList.remove("projectile");
+  }
+  projectilePositions = [];
 
   //reset score
-  alert("You died. Game Over!");
+  alert(`Game Over! Your final score was ${score}`);
+  score = 0;
+  scoreboard.innerText = `${score}`;
 }
 
 start.addEventListener("click", () => {
   // clearArray();
-  console.log(cells);
+  // console.log(cells);
   //loadGrid();
   loadSpaceship();
-  console.log(cells[390]);
-  console.log(cells[`${cells[390].classList}`]);
+  // console.log(cells[390]);
+  // console.log(cells[`${cells[390].classList}`]);
   // cell 390 has spaceship in its class
   loadEnemy1();
   loadEnemy2();
