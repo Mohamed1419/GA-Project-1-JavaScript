@@ -17,6 +17,7 @@ thinking of all the aspects that dont manifest upon loading up
     - projectile needs to be loaded in when spacebar pressed, invoke spawnProjectile function which spawns projectile based on the position of the spaceship and then use a setinterval to move the projectile independant of the spaceship position
     - upon contact with cell containing an enemy despawn enemy, despawn projectile, update score, and update projectile position
         - in order for game tto recognise contact with enemy, every interval needs to check upon enemypositions via a loop 
+        - ran into trouble with firing multiple projectiles had to move from a number variable to an array and alter my code so that i can store multiple projectile positions based on their positions on the grid
 - movements of space ship
 - movement of invaders
 - score tracker update

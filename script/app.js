@@ -12,9 +12,10 @@ let enemy1positions = [];
 let enemy2positions = [];
 let enemy3positions = [];
 let enemy4positions = [];
-let projectilePosition = null;
+let enemyPositions = [];
+let projectilePositions = [];
 
-//adding left right functionality for spaceship
+//adding left, right and fire functionality for spaceship
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
@@ -22,16 +23,16 @@ function keyDownHandler(e) {
   if (e.key == "Right" || e.key == "ArrowRight") {
     rightPressed = true;
     updatePosition();
-    console.log("right arrow has been pressed!");
-    console.log(rightPressed);
+    // console.log("right arrow has been pressed!");
+    // console.log(rightPressed);
   } else if (e.key == "Left" || e.key == "ArrowLeft") {
     leftPressed = true;
     updatePosition();
-    console.log("left arrow has been pressed");
+    // console.log("left arrow has been pressed");
   } else if (e.key == "Space" || e.keyCode == 32) {
     spacePressed = true;
     spawnProjectile();
-    console.log("spacebar has been pressed");
+    // console.log("spacebar has been pressed");
   }
 }
 
@@ -39,62 +40,83 @@ function keyUpHandler(e) {
   if (e.key == "Right" || e.key == "ArrowRight") {
     rightPressed = false;
     updatePosition();
-    console.log("right arrow has been released!");
-    console.log(rightPressed);
+    // console.log("right arrow has been released!");
+    // console.log(rightPressed);
   } else if (e.key == "Left" || e.key == "ArrowLeft") {
     leftPressed = false;
     updatePosition();
-    console.log("left arrow has been released!");
+    // console.log("left arrow has been released!");
   } else if (e.key == "Space" || e.keyCode == 32) {
     spacePressed = false;
-    console.log("spacebar has been released!");
+    // console.log("spacebar has been released!");
   }
 }
 
 //projectile funtionality
 
+//projectile fire when space is pressed
 function spawnProjectile() {
-  if (spacePressed === true) {
-    let newProjectile =
-      cells[spaceshipPosition - 20].classList.add("projectile");
-    projectilePosition = cells[spaceshipPosition - 20];
-  }
-}
-/*
-const projectilePath = setInterval(() => {
-  for (let i = 0; i < enemy1positions.length; i++) {
-    if (projectilePosition === enemy1positions[i] + 20) {
-      //remove enemy
-      enemy1positions.splice(i, 1);
-      cells[i].classList.remove("enemy1");
-      //remove projectile
-      projectilePosition = null;
-      cells[i + 20].classList.remove("projectile");
-      //despawn enemyx , despawn projectile, add 100 points, update projectilePosition
-      clearInterval(projectilePath);
-    } else {
-      cells[projectilePosition].classList.remove("projectile");
-      projectilePosition -= 20;
-      cells[projectilePosition].classList.add("projectile");
+  let newProjectilePositon = spaceshipPosition - 20;
+  projectilePositions.push(newProjectilePositon);
+  cells[
+    //should be a number 1-400
+    projectilePositions[projectilePositions.indexOf(newProjectilePositon)] //
+  ].classList.add("projectile");
+  //number on the grid is pushed into projectilePositions array
+
+  const projectilePath = setInterval(() => {
+    for (let i = 0; i < projectilePositions.length; i++) {
+      if (projectilePositions[i] > 20) {
+        cells[projectilePositions[i]].classList.remove("projectile");
+        projectilePositions[i] -= 20;
+        cells[projectilePositions[i]].classList.add("projectile");
+        console.log(projectilePositions + " MOVING");
+      } else if (projectilePositions[i] <= 20 /*if its on the first row*/) {
+        console.log("one has reached the end" + projectilePositions);
+        cells[projectilePositions[i]].classList.remove("projectile");
+        // projectilePositions.splice(projectilePositions.indexOf(i), 1);
+        projectilePositions.shift();
+        console.log(projectilePositions);
+      } else if (
+        projectilePositions[i] <= 20 &&
+        projectilePositions.length <= 1
+      ) {
+        console.log("STOP CODE");
+        cells[projectilePositions[i]].classList.remove("projectile");
+        // projectilePositions.splice(projectilePositions.indexOf(i), 1);
+        projectilePositions.shift();
+        console.log(projectilePositions);
+        clearInterval(projectilePath);
+      }
     }
-  }
-}, 100);
-*/
+    //projectile hit
+    enemyPositions.every((position) => {
+      if (projectilePositions === position + 20) {
+        cells[position].classList.remove(
+          "enemy1",
+          "enemy2",
+          "enemy3",
+          "enemy4"
+        );
+        enemy1positions.splice(enemy1positions.indexOf(position), 1, null);
+        enemy2positions.splice(enemy2positions.indexOf(position), 1, null);
+        enemy3positions.splice(enemy3positions.indexOf(position), 1, null);
+        enemy4positions.splice(enemy4positions.indexOf(position), 1, null);
+        clearInterval(projectilePath);
+        cells[projectilePositions].classList.remove("projectile");
+        return false;
+      }
+      return true;
+    });
+  }, 400);
+}
 
-const projectilePath = setInterval(() => {
-  if (projectilePosition > 0) {
-    cells[projectilePosition].classList.remove("projectile");
-    projectilePosition -= 20;
-    cells[projectilePosition].classList.add("projectile");
-    console.log("button has been pressed");
-  }
-}, 100);
-
+//spaceship movement
 function updatePosition() {
   if (rightPressed && spaceshipPosition < 399) {
     cells[`${spaceshipPosition}`].classList.remove("spaceship");
     spaceshipPosition++;
-    console.log(cells[`${spaceshipPosition}`]);
+    // console.log(cells[`${spaceshipPosition}`]);
     cells[`${spaceshipPosition}`].classList.add("spaceship");
   } else if (leftPressed && spaceshipPosition > 380) {
     cells[`${spaceshipPosition}`].classList.remove("spaceship");
@@ -104,10 +126,8 @@ function updatePosition() {
 }
 
 //need to clear array to stop addition of 400 elements everytime user presses start
-// function clearArray() {
-//   cells = [];
-// }
 
+//load grid
 function loadGrid() {
   for (let i = 0; i < gridCount; i++) {
     const newCell = document.createElement("div");
@@ -234,6 +254,13 @@ const enemyMovement = setInterval(() => {
     cells[`${position}`].classList.add("enemy4");
     return position;
   });
+
+  enemyPositions = enemy1positions.concat(
+    enemy2positions,
+    enemy3positions,
+    enemy4positions
+  );
+  // console.log(enemyPositions);
 
   // if any of the values in any of the 4 enemy position arrays are greater than 380, call gameOver function
   enemy1positions.every((position) => {
