@@ -5,7 +5,8 @@ const scoreboard = document.getElementById("scoreboard");
 let score = 0;
 scoreboard.innerText = `${score}`;
 let level = 1;
-let spaceshipPosition = 390;
+let difficulty = 5000;
+let spaceshipPosition = null;
 let cells = [];
 let gridCount = 400;
 let rightPressed = false;
@@ -185,6 +186,7 @@ function loadGrid() {
 loadGrid();
 
 function loadSpaceship() {
+  spaceshipPosition = 390;
   cells[`${spaceshipPosition}`].classList.add("spaceship");
   // console.log("spaceship has been loaded");
 }
@@ -223,7 +225,24 @@ function loadEnemy4() {
   }
 }
 
+start.addEventListener("click", () => {
+  // clearArray();
+  // console.log(cells);
+  //loadGrid();
+  loadSpaceship();
+  // console.log(cells[390]);
+  // console.log(cells[`${cells[390].classList}`]);
+  // cell 390 has spaceship in its class
+  loadEnemy1();
+  loadEnemy2();
+  loadEnemy3();
+  loadEnemy4();
+});
+
 function gameOver() {
+  //remove spaceship
+  cells[spaceshipPosition].classList.remove("spaceship");
+  spaceshipPosition = null;
   //remove enemies
   for (let i = 0; i < enemy1positions.length; i++) {
     cells[`${enemy1positions[i]}`].classList.remove("enemy1");
@@ -250,33 +269,46 @@ function gameOver() {
     cells[projectilePositions[i]].classList.remove("projectile");
   }
   projectilePositions = [];
-
   //reset score
   alert(`Game Over! Your final score was ${score}`);
+
+  for (let i = 0; i < projectilePositions.length; i++) {
+    cells[projectilePositions[i]].classList.remove("projectile");
+  }
+  projectilePositions = [];
   score = 0;
   scoreboard.innerText = `${score}`;
+  level = 1;
 }
 
-start.addEventListener("click", () => {
-  // clearArray();
-  // console.log(cells);
-  //loadGrid();
+function endLevel() {
+  cells[spaceshipPosition].classList.remove("spaceship");
+  spaceshipPosition = null;
+  alert(`level ${level} complete. Press OK to start next level`);
+  for (let i = 0; i < projectilePositions.length; i++) {
+    cells[projectilePositions[i]].classList.remove("projectile");
+  }
+  level += 1;
+
+  difficulty -= difficulty * 0.2;
+
   loadSpaceship();
-  // console.log(cells[390]);
-  // console.log(cells[`${cells[390].classList}`]);
-  // cell 390 has spaceship in its class
   loadEnemy1();
   loadEnemy2();
   loadEnemy3();
   loadEnemy4();
-});
+  clearInterval(enemyMovement);
+  enemyMovement = setInterval(() => {
+    moving();
+    console.log("Second level counter");
+  }, difficulty);
+}
 
 //enemy descent
 
 //GENERAL OUTLOOK: every second (for the sake of testing) every enemy will be removed from its position, given a new position on grid, and then added to those new positions on the grid
-const enemyMovement = setInterval(() => {
-  //cells[`${enemy1positions}`].classList.remove("enemy1"); //will need to loop through the enemy1positions
-
+function moving() {
+  //will need to loop through the enemy1positions
   cells.forEach((cell) => {
     if (
       cell.classList.contains("enemy1") ||
@@ -351,4 +383,12 @@ const enemyMovement = setInterval(() => {
     }
     return true;
   });
-}, 1000);
+
+  //when all enemies are killed new level is started, but spaceship needs to be despawned beforehand
+  if (enemyPositions.length <= 0 && spaceshipPosition) {
+    endLevel();
+  }
+}
+let enemyMovement = setInterval(() => {
+  moving();
+}, difficulty);
