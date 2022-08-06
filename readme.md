@@ -154,6 +154,15 @@ My first steps in planning out this project is to determine which technology dec
     - gameover function resets enemies on grid, resets level, reset difficulty
 - load up score board
 
+- gun firing
+    - projectile needs to be loaded in when spacebar pressed, invoke spawnProjectile function which spawns projectile based on the position of the spaceship and then use a setinterval to move the projectile independant of the spaceship position
+- movements of space ship
+- movement of invaders
+- score tracker update
+- invaders dying when bullets hit them
+- game over when invader reaches space ship row
+- levelling system
+
 This was my initial plan which provided me with guidance and a general outlook on what the game will look like. I will be using Trello boards and specifically the Kanban template in order to keep track and better able to manage my project. https://trello.com/b/xM4OhKAR/kanban-template. I mapped out my initial plan chunks into the Trello board and when i start work on a specific section, i will constantly be updating the Trello board and reviewing my approach if i do come to realise that a change needs to be made. 
 
 Throughout this project i will be using 
