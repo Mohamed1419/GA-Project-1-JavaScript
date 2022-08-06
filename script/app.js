@@ -279,6 +279,12 @@ function gameOver() {
   score = 0;
   scoreboard.innerText = `${score}`;
   level = 1;
+  difficulty = 5000;
+  clearInterval(enemyMovement);
+  enemyMovement = setInterval(() => {
+    moving();
+    console.log("Second level counter");
+  }, difficulty);
 }
 
 function endLevel() {

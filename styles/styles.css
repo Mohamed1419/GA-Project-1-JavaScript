@@ -4,15 +4,33 @@
 
 body {
     margin: 0;
+    background-color: black;
+    color: aqua;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    margin: 30px 200px;
+}
+
+#start-button {
+    padding: 10px;
+    margin: 10px;
+    color: aqua;
+    border-radius: 20px;
+    border: solid 2px aqua;
+    background-color: black;
+    font-size: 30px;
+}
+
+h2 {
+    font-size: 30px;
 }
 
 #cell-container {
+    margin-left: 30%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
