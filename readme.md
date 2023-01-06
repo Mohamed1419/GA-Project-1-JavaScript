@@ -47,7 +47,7 @@ Planning
   - Will need to load up grid
       - How to create sense of direction with grid??
           - Will assign numbers 1-400 to each cell in the grid, therefore grid will be 20x20 and so an increment or decrement of 20 will mean vertical movement
-  - load up space ship
+  - Load up space ship
       - Increments or decrements of 1 will mean horizontal movement
       - Restrict movement between cells 381 - 400 (bottom row) so spaceship does not go off grid or into the row above it
   - Load up enemy invaders
